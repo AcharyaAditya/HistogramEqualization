@@ -52,6 +52,8 @@ public class HistEq {
         for (int x = 1; x < width; x++) {
             for (int y = 1; y < height; y++) {
                 int valueBefore = bi.getRaster().getPixel(x, y, iarray)[0];
+                System.out.println(valueBefore);
+
                 histogram[valueBefore]++;
             }
         }
@@ -71,6 +73,8 @@ public class HistEq {
                 int valueBefore = bi.getRaster().getPixel(x, y, iarray)[0];
                 int valueAfter = (int) lut[valueBefore];
                 iarray[0] = valueAfter;
+                iarray[1] = valueAfter;
+                iarray[2] = valueAfter;
                 bi.getRaster().setPixel(x, y, iarray);
                 i = i + 1;
             }

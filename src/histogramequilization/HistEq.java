@@ -52,11 +52,20 @@ public class HistEq {
         for (int x = 1; x < width; x++) {
             for (int y = 1; y < height; y++) {
                 int valueBefore = bi.getRaster().getPixel(x, y, iarray)[0];
-                System.out.println(valueBefore);
-
                 histogram[valueBefore]++;
             }
         }
+        
+        int indexNo = 0;
+        int minFrequencyCount = anzpixel;
+        for (int k = 0; k < 255 ; k++){
+            if(histogram[k] < minFrequencyCount && histogram[k] != 0){
+                minFrequencyCount = histogram[k];
+                indexNo = k;
+            }
+        }
+        
+        System.out.println(minFrequencyCount + " " +indexNo);
 
         // build a Lookup table LUT containing scale factor
         int sum = 0;
@@ -67,16 +76,16 @@ public class HistEq {
         }
 
         // transform image using sum histogram as a Lookup table
-        i = 0;
+
         for (int x = 1; x < width; x++) {
             for (int y = 1; y < height; y++) {
                 int valueBefore = bi.getRaster().getPixel(x, y, iarray)[0];
                 int valueAfter = (int) lut[valueBefore];
                 iarray[0] = valueAfter;
-                iarray[1] = valueAfter;
-                iarray[2] = valueAfter;
+//                iarray[1] = valueAfter;
+//                iarray[2] = valueAfter;
                 bi.getRaster().setPixel(x, y, iarray);
-                i = i + 1;
+
             }
         }
         return bi; //return buffered image to main

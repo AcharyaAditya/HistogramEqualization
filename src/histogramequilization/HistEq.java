@@ -56,6 +56,9 @@ public class HistEq {
             }
         }
         
+        DrawGraph drawGraph = new DrawGraph(histogram,255, anzpixel);
+//        drawGraph.createAndShowGui(histogram, 255);
+        
         int indexNo = 0;
         int minFrequencyCount = anzpixel;
         for (int k = 0; k < 255 ; k++){
@@ -72,7 +75,9 @@ public class HistEq {
         float[] lut = new float[anzpixel];
         for (i = 0; i < 255; ++i) {
             sum += histogram[i];
-            lut[i] = sum * 255 / anzpixel;
+//            lut[i] = sum * 255 / anzpixel;
+            lut[i] = (sum-minFrequencyCount) * 255/(anzpixel - minFrequencyCount);
+//            lut[i] = ((sum - minFrequencyCount)/(anzpixel - minFrequencyCount)) * 255;
         }
 
         // transform image using sum histogram as a Lookup table
@@ -82,12 +87,21 @@ public class HistEq {
                 int valueBefore = bi.getRaster().getPixel(x, y, iarray)[0];
                 int valueAfter = (int) lut[valueBefore];
                 iarray[0] = valueAfter;
-//                iarray[1] = valueAfter;
-//                iarray[2] = valueAfter;
+                iarray[1] = valueAfter;
+                iarray[2] = valueAfter;
                 bi.getRaster().setPixel(x, y, iarray);
 
             }
         }
+        
+        for (int x = 1; x < width; x++) {
+            for (int y = 1; y < height; y++) {
+                int valueBefore = bi.getRaster().getPixel(x, y, iarray)[0];
+                histogram[valueBefore]++;
+            }
+        }
+        
+        DrawGraph drawGraph1 = new DrawGraph(histogram,255, anzpixel);
         return bi; //return buffered image to main
     }
 }

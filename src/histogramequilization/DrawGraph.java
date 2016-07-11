@@ -5,6 +5,12 @@
  */
 package histogramequilization;
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,14 +26,14 @@ import javax.swing.*;
 
 
 public class DrawGraph extends JPanel {
-   private static final int MAX_SCORE = 20;
+   private int maxScore;
    private static final int PREF_W = 800;
    private static final int PREF_H = 650;
    private static final int BORDER_GAP = 30;
    private static final Color GRAPH_COLOR = Color.green;
    private static final Color GRAPH_POINT_COLOR = new Color(150, 50, 50, 180);
-   private static final Stroke GRAPH_STROKE = new BasicStroke(3f);
-   private static final int GRAPH_POINT_WIDTH = 12;
+   private static final Stroke GRAPH_STROKE = new BasicStroke();
+   private static final int GRAPH_POINT_WIDTH = 10;
    private static final int Y_HATCH_CNT = 10;
    private List<Integer> scores;
 
@@ -42,12 +48,12 @@ public class DrawGraph extends JPanel {
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
       double xScale = ((double) getWidth() - 2 * BORDER_GAP) / (scores.size() - 1);
-      double yScale = ((double) getHeight() - 2 * BORDER_GAP) / (MAX_SCORE - 1);
+      double yScale = ((double) getHeight() - 2 * BORDER_GAP) / (maxScore - 1);
 
       List<Point> graphPoints = new ArrayList<Point>();
       for (int i = 0; i < scores.size(); i++) {
          int x1 = (int) (i * xScale + BORDER_GAP);
-         int y1 = (int) ((MAX_SCORE - scores.get(i)) * yScale + BORDER_GAP);
+         int y1 = (int) ((maxScore - scores.get(i)) * yScale + BORDER_GAP);
          graphPoints.add(new Point(x1, y1));
       }
 
@@ -76,23 +82,21 @@ public class DrawGraph extends JPanel {
       Stroke oldStroke = g2.getStroke();
       g2.setColor(GRAPH_COLOR);
       g2.setStroke(GRAPH_STROKE);
-      for (int i = 0; i < graphPoints.size() - 1; i++) {
+      for (int i = 0; i < graphPoints.size(); i++) {
          int x1 = graphPoints.get(i).x;
-         int y1 = graphPoints.get(i).y;
-         int x2 = graphPoints.get(i + 1).x;
-         int y2 = graphPoints.get(i + 1).y;
-         g2.drawLine(x1, y1, x2, y2);         
+         int y1 = (graphPoints.get(i).y);
+         g2.drawLine(x1, 0, x1, y1);         
       }
 
-      g2.setStroke(oldStroke);      
-      g2.setColor(GRAPH_POINT_COLOR);
-      for (int i = 0; i < graphPoints.size(); i++) {
-         int x = graphPoints.get(i).x - GRAPH_POINT_WIDTH / 2;
-         int y = graphPoints.get(i).y - GRAPH_POINT_WIDTH / 2;;
-         int ovalW = GRAPH_POINT_WIDTH;
-         int ovalH = GRAPH_POINT_WIDTH;
-         g2.fillOval(x, y, ovalW, ovalH);
-      }
+//      g2.setStroke(oldStroke);      
+//      g2.setColor(GRAPH_POINT_COLOR);
+//      for (int i = 0; i < graphPoints.size(); i++) {
+//         int x = graphPoints.get(i).x - GRAPH_POINT_WIDTH / 2;
+//         int y = graphPoints.get(i).y - GRAPH_POINT_WIDTH / 2;;
+//         int ovalW = GRAPH_POINT_WIDTH;
+//         int ovalH = GRAPH_POINT_WIDTH;
+//         g2.fillOval(x, y, ovalW, ovalH);
+//      }
    }
 
    @Override
@@ -100,13 +104,13 @@ public class DrawGraph extends JPanel {
       return new Dimension(PREF_W, PREF_H);
    }
 
-   private static void createAndShowGui() {
+   private static void createAndShowGui(int[] points, int noOfData) {
       List<Integer> scores = new ArrayList<Integer>();
       Random random = new Random();
-      int maxDataPoints = 16;
-      int maxScore = 20;
+      int maxDataPoints = noOfData;
+     
       for (int i = 0; i < maxDataPoints ; i++) {
-         scores.add(random.nextInt(maxScore));
+         scores.add(points[i]);
       }
       DrawGraph mainPanel = new DrawGraph(scores);
 
@@ -118,11 +122,13 @@ public class DrawGraph extends JPanel {
       frame.setVisible(true);
    }
 
-   public static void main(String[] args) {
+   public DrawGraph (int[] points,int noOfData, int score) {
+        this.maxScore = score;
       SwingUtilities.invokeLater(new Runnable() {
          public void run() {
-            createAndShowGui();
+            createAndShowGui(points, noOfData);
          }
       });
    }
 }
+

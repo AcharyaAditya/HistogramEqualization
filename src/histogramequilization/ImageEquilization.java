@@ -23,7 +23,7 @@ public class ImageEquilization {
         BufferedImage img = null, img1 = null;
         img = ImageIO.read(new File("images/wiki.jpg"));
 
-        File f = new File("subimages/testHistoRed.png");
+        File f = new File("subimages/testWiki2.png");
         HistEq histEq = new HistEq();
         //retreive equilized image
         img1 = histEq.Change(img);
